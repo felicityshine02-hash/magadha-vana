@@ -1355,18 +1355,32 @@
     display: none;
   }
 
+  /* Mobile: drop the shipping line — the palette switcher owns the top bar,
+     and the bar pins to the viewport so the palette pill stays visible
+     while scrolling any page. */
   .notice-copy {
-    flex-shrink: 0;
-    font-size: 8.5px;
-    letter-spacing: 0.05em;
+    display: none;
+  }
+
+  .notice {
+    position: sticky;
+    top: 0;
+    z-index: 70;
+    backdrop-filter: blur(12px);
+  }
+
+  .site-header {
+    position: static;
   }
 
   .notice-inner {
+    justify-content: center;
     gap: 10px;
   }
 
   .palette-dots {
     flex: 1 1 auto;
+    justify-content: center;
     min-width: 0;
     overflow: hidden;
   }
@@ -1471,30 +1485,24 @@
 
 @media (max-width: 520px) {
   .notice-inner {
+    justify-content: center;
     padding-block: 7px;
     gap: 8px;
   }
 
-  .notice-copy {
-    flex-shrink: 0;
-    font-size: 8px;
-  }
-
-  /* Keep the palette switcher on the top bar as a horizontal scroll,
-     same behaviour as desktop. */
+  /* Full-width centred palette pill on small phones — hide the label
+     so all four palettes fit on one line. */
   .palette-dots {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
+    justify-content: center;
   }
 
   .palette-dots-label {
-    flex-shrink: 0;
+    display: none;
   }
 
   .palette-dots-scroll {
-    flex: 1 1 auto;
-    min-width: 0;
+    margin: 0 auto;
+    max-width: 100%;
   }
 
   .palette-link-name {
