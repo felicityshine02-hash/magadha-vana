@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Bag,
-  BrandTree,
-  CloseIcon,
-  MenuIcon,
-  MapPin,
-} from "@/components/Icons";
+import { Bag, BrandTree, MapPin } from "@/components/Icons";
 import { navTabs, palettes, type NavTab, type ThemeId } from "@/lib/content";
 
 type SiteNavProps = {
@@ -18,7 +12,6 @@ type SiteNavProps = {
 
 export function SiteNav({ theme, cartCount }: SiteNavProps) {
   const [active, setActive] = useState<NavTab | "">("");
-  const [menuOpen, setMenuOpen] = useState(false);
   const homeRoute = palettes.find((palette) => palette.id === theme)?.route ?? "/";
 
   useEffect(() => {
@@ -55,15 +48,6 @@ export function SiteNav({ theme, cartCount }: SiteNavProps) {
     };
   }, []);
 
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
-
   return (
     <>
       <div className="notice">
@@ -79,23 +63,25 @@ export function SiteNav({ theme, cartCount }: SiteNavProps) {
           </p>
           <div className="palette-dots" aria-label="Choose a colour palette">
             <span className="palette-dots-label">Palette</span>
-            {palettes.map((palette, index) => (
-              <Link
-                key={palette.id}
-                href={palette.route}
-                className="palette-link"
-                aria-current={theme === palette.id ? "page" : undefined}
-                aria-label={`Palette ${index + 1}: ${palette.name}`}
-              >
-                <span
-                  className="palette-swatch"
-                  style={{ background: palette.swatches[3] }}
-                />
-                <span className="palette-link-name">
-                  {String(index + 1).padStart(2, "0")} {palette.name}
-                </span>
-              </Link>
-            ))}
+            <div className="palette-dots-scroll">
+              {palettes.map((palette, index) => (
+                <Link
+                  key={palette.id}
+                  href={palette.route}
+                  className="palette-link"
+                  aria-current={theme === palette.id ? "page" : undefined}
+                  aria-label={`Palette ${index + 1}: ${palette.name}`}
+                >
+                  <span
+                    className="palette-swatch"
+                    style={{ background: palette.swatches[3] }}
+                  />
+                  <span className="palette-link-name">
+                    {String(index + 1).padStart(2, "0")} {palette.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -112,23 +98,6 @@ export function SiteNav({ theme, cartCount }: SiteNavProps) {
             </span>
           </Link>
 
-          <nav className="tabs" aria-label="Primary">
-            {navTabs.map((tab) => (
-              <a
-                key={tab.id}
-                href={`#${tab.id}`}
-                className={`tab ${active === tab.id ? "is-active" : ""}`}
-                aria-current={active === tab.id ? "true" : undefined}
-                onClick={() => {
-                  setActive(tab.id);
-                  setMenuOpen(false);
-                }}
-              >
-                {tab.label}
-              </a>
-            ))}
-          </nav>
-
           <div className="nav-tools">
             <a
               href="#shop"
@@ -141,63 +110,23 @@ export function SiteNav({ theme, cartCount }: SiteNavProps) {
                 {cartCount}
               </span>
             </a>
-            <button
-              type="button"
-              className="menu-btn"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              {menuOpen ? <CloseIcon /> : <MenuIcon />}
-            </button>
           </div>
-        </div>
 
-        <div
-          id="mobile-menu"
-          className={`mobile-menu ${menuOpen ? "is-open" : ""}`}
-          hidden={!menuOpen}
-        >
-          <nav className="mobile-links" aria-label="Mobile">
-            {navTabs.map((tab, index) => (
+          <nav className="tabs" aria-label="Primary">
+            {navTabs.map((tab) => (
               <a
                 key={tab.id}
                 href={`#${tab.id}`}
-                className="mobile-link"
+                className={`tab ${active === tab.id ? "is-active" : ""}`}
+                aria-current={active === tab.id ? "true" : undefined}
                 onClick={() => {
                   setActive(tab.id);
-                  setMenuOpen(false);
                 }}
               >
-                <span>{String(index + 1).padStart(2, "0")}</span>
                 {tab.label}
               </a>
             ))}
           </nav>
-          <div className="mobile-palette">
-            <span className="palette-dots-label">Colour palette</span>
-            <div className="mobile-palette-links">
-              {palettes.map((palette) => (
-                <Link
-                  key={palette.id}
-                  href={palette.route}
-                  className="mobile-palette-link"
-                  aria-current={theme === palette.id ? "page" : undefined}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  <span
-                    className="palette-swatch"
-                    style={{ background: palette.swatches[3] }}
-                  />
-                  {palette.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <p className="mobile-ship">
-            Free shipping across India over ₹1,250 · Packed at the farm
-          </p>
         </div>
       </header>
     </>
