@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { Bag, BrandTree, MapPin } from "@/components/Icons";
 import { navTabs, palettes, type NavTab, type ThemeId } from "@/lib/content";
@@ -113,18 +113,24 @@ export function SiteNav({ theme, cartCount }: SiteNavProps) {
           </div>
 
           <nav className="tabs" aria-label="Primary">
-            {navTabs.map((tab) => (
-              <a
-                key={tab.id}
-                href={`#${tab.id}`}
-                className={`tab ${active === tab.id ? "is-active" : ""}`}
-                aria-current={active === tab.id ? "true" : undefined}
-                onClick={() => {
-                  setActive(tab.id);
-                }}
-              >
-                {tab.label}
-              </a>
+            {navTabs.map((tab, index) => (
+              <Fragment key={tab.id}>
+                <a
+                  href={`#${tab.id}`}
+                  className={`tab ${active === tab.id ? "is-active" : ""}`}
+                  aria-current={active === tab.id ? "true" : undefined}
+                  onClick={() => {
+                    setActive(tab.id);
+                  }}
+                >
+                  {tab.label}
+                </a>
+                {index === 0 ? (
+                  <Link href="/fonts" className="tab tab-fonts">
+                    Fonts
+                  </Link>
+                ) : null}
+              </Fragment>
             ))}
           </nav>
         </div>
